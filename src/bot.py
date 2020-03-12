@@ -12,7 +12,8 @@ class Bot:
     def get_help():
         embed = discord.Embed(title='KarotBot Manual', description='List of commands')
         embed.add_field(name='!help', value="Show the list of command", inline=False)
-        embed.add_field(name='!news', value="Display Apex's latest news", inline=False)
+        embed.add_field(name='!news', value="Display Apex's latest news (in developement)", inline=False)
+        embed.add_field(name='!latest_news', value="Post Apex's latest news in the news-apex channel", inline=False)
         embed.add_field(name='!quit', value="Cancel the current command", inline=False)
 
         return embed
@@ -61,7 +62,9 @@ class Bot:
         return self.last_message is not None
 
     async def check_publication(self, channel):
-        messages = await channel.history(limit=25).flatten()
+        messages = await channel.history(limit=50).flatten()
+        if not self.news_links:
+            self.get_news()
         for message in messages:
             for news in self.news_links:
                 links = self.news_links[news]['article'].find_all('a', limit=1)
@@ -69,7 +72,6 @@ class Bot:
                     self.news_links[news]['link'] = self.url[:-14] + a['href']
                     if self.url[:-14] + a['href'] in message.content:
                         self.news_links[news]['published'] = True
-                print(self.news_links[news])
 
     async def check_latest_news(self, channel):
         await self.check_publication(channel)

@@ -1,6 +1,5 @@
 #! python3
 # todo : on selection publish article in news channel
-# todo : parse all messages to see if news are missing and post missing ones
 
 import discord
 from bot import Bot
@@ -9,7 +8,7 @@ client = discord.Client()
 
 
 def read_env():
-    with open("src/.env", "r") as f:
+    with open("src/.env.local", "r") as f:
         lines = f.readlines()
         return lines
 
@@ -37,7 +36,6 @@ async def on_message(message):
         bot.last_message = await message.channel.send(content=None, embed=bot.get_news())
 
     if message.content.startswith('!latest_news'):
-        # not working maybe it's the channel id.
         await bot.check_latest_news(client.get_channel(671722922422829096))
 
 
